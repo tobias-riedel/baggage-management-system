@@ -1,0 +1,523 @@
+%% Artikelvorlage unter Verwendung der Artikelklasse des KOMA-Script %%
+%% Basierend auf einer TeXNicCenter-Vorlage von Mark Müller          %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Wählen Sie die Optionen aus, indem Sie % vor der Option entfernen  
+% Dokumentation des KOMA-Script-Packets: scrguide
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Optionen zum Layout des Artikels                                  %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[%
+%a5paper,							% alle weiteren Papierformat einstellbar
+a4paper,							% alle weiteren Papierformat einstellbar
+%landscape,						% Querformat
+12pt,									% Schriftgröße (12pt, 11pt (Standard))
+%BCOR1cm,							% Bindekorrektur, bspw. 1 cm
+%DIVcalc,							% führt die Satzspiegelberechnung neu aus
+%											  s. scrguide 2.4
+%twoside,							% Doppelseiten
+%twocolumn,						% zweispaltiger Satz
+%halfparskip*,				% Absatzformatierung s. scrguide 3.1
+%headsepline,					% Trennline zum Seitenkopf	
+%footsepline,					% Trennline zum Seitenfuß
+titlepage,						% Titelei auf eigener Seite
+normalheadings,				% Überschriften etwas kleiner (smallheadings)
+%idxtotoc,						% Index im Inhaltsverzeichnis
+liststotoc,					% Abb.- und Tab.verzeichnis im Inhalt
+bibtotoc						% Literaturverzeichnis im Inhalt
+%abstracton,					% Überschrift über der Zusammenfassung an	
+%leqno,   						% Nummerierung von Gleichungen links
+%fleqn,								% Ausgabe von Gleichungen linksbündig
+%draft								% überlangen Zeilen in Ausgabe gekennzeichnet
+]
+{scrartcl}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0.4pt}
+%\renewcommand{\footrulewidth}{0.4pt}
+\lfoot{Tobias Riedel}
+\cfoot{Datenbankpraktikum SoSe 2008}
+\rfoot{\thepage}
+%% Links %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[colorlinks = true, linkcolor = black, citecolor = green, filecolor = magenta, urlcolor = cyan]{hyperref}
+
+
+%\pagestyle{empty}		% keine Kopf und Fußzeile (k. Seitenzahl)
+%\pagestyle{headings}	% lebender Kolumnentitel  
+
+%% Normales LaTeX oder pdfLaTeX? %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ==> Das neue if-Kommando "\ifpdf" wird an einigen wenigen
+%% ==> Stellen benötigt, um die Kompatibilität zwischen
+%% ==> LaTeX und pdfLaTeX herzustellen.
+\newif\ifpdf
+\ifx\pdfoutput\undefined
+	\pdffalse              	%normales LaTeX wird ausgeführt
+\else
+	\pdfoutput=1           
+	\pdftrue               	%pdfLaTeX wird ausgeführt
+\fi
+
+%% Fonts für pdfLaTeX, falls keine cm-super-Fonts installiert %%%%%%%%
+%\ifpdf
+	%\usepackage{ae}        % Benutzen Sie nur
+	%\usepackage{zefonts}  	% eines dieser Pakete
+%\else
+	%%Normales LaTeX - keine speziellen Fontpackages notwendig
+%\fi
+
+%% optischer Randausgleich, falls pdflatex verwandt %%%%%%%%%%%%%%%%%%%
+\ifpdf
+\usepackage[activate]{pdfcprot}				
+\else											% pdfcprot funktioniert nur mit pdflatex
+\fi
+
+%% Packages für Grafiken & Abbildungen %%%%%%%%%%%%%%%%%%%%%%
+\ifpdf %%Einbindung von Grafiken mittels \includegraphics{datei}
+	\usepackage[pdftex]{graphicx} %%Grafiken in pdfLaTeX
+\else
+	\usepackage[dvips]{graphicx} %%Grafiken und normales LaTeX
+\fi
+%\usepackage[hang]{subfigure} %%Mehrere Teilabbildungen in einer Abbildung
+%\usepackage{pst-all} %%PSTricks - nicht verwendbar mit pdfLaTeX
+
+%% deutsche Anpassung %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[ngerman]{babel}		
+\usepackage[T1]{fontenc}							
+\usepackage[latin1]{inputenc}		
+
+%% Bibliographiestil %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{natbib}
+\usepackage{bibgerm}
+
+%% Bilder von Text umfliessen lassen %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{floatflt}
+
+%% Bildpositionierung %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{float}
+
+%% Mehrspaltigkeit %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{multicol}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Zeilenabstände
+\usepackage{setspace}
+\onehalfspace
+
+%% Verberge Subsubsections im Inhaltsverzeichnis
+\setcounter{tocdepth}{2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%% Dateiendungen für Grafiken %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ==> Sie können hiermit die Dateiendung einer Grafik weglassen.
+%% ==> Aus "\includegraphics{titel.eps}" wird "\includegraphics{titel}".
+%% ==> Wenn Sie nunmehr 2 inhaltsgleiche Grafiken "titel.eps" und
+%% ==> "titel.pdf" erstellen, wird jeweils nur die Grafik eingebunden,
+%% ==> die von ihrem Compiler verarbeitet werden kann.
+%% ==> pdfLaTeX benutzt "titel.pdf". LaTeX benutzt "titel.eps".
+\ifpdf
+	\DeclareGraphicsExtensions{.pdf,.jpg,.png}
+\else
+	\DeclareGraphicsExtensions{.eps}
+\fi
+
+%\pagestyle{empty} %%Keine Kopf-/Fusszeilen auf den ersten Seiten.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Ihr Artikel                                                       %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% eigene Titelseitengestaltung %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%\begin{titlepage}
+%Einsetzen der TXC Vorlage "Deckblatt" möglich
+%\end{titlepage}
+
+%% Angaben zur Standardformatierung des Titels %%%%%%%%%%%%%%%%%%%%%%%%
+\titlehead{Datenbankpraktikum SoSe 2008}
+%\subject{Typisierung}
+\title{Simulation einer automatischen Gepäckaufbewahrung}
+\author{Tobias Riedel 725241}
+%\thanks{Projekt SoSe 2008}			% entspr. \footnote im Fließtext
+%\date{}							% falls anderes, als das aktuelle gewünscht
+\publishers{Universität Potsdam}
+
+%% Widmungsseite %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\dedication{Widmung}
+
+\maketitle 						% Titelei wird erzeugt
+
+%% Zusammenfassung nach Titel, vor Inhaltsverzeichnis %%%%%%%%%%%%%%%%%
+%\begin{abstract}
+% Für eine kurze Zusammenfassung des folgenden Artikels.
+% Für die Überschrift s. \documentclass[abstracton].
+%\end{abstract}
+
+%% Erzeugung von Verzeichnissen %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tableofcontents			% Inhaltsverzeichnis
+\newpage
+\listoftables				% Tabellenverzeichnis
+\listoffigures				% Abbildungsverzeichnis
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\part[Erster Streich]{wenige Erläuterungen}
+%\section[Überschriften]{Überschrift und das Inhaltsverzeichnis}
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Aufgabenstellung
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\section{Aufgabenstellung}
+		\label{chap:Aufgabenstellung}
+	
+		Aufgabe des Datenbankpraktikums war es, eine automatische Gepäckaufbewahrung zu simulieren, ähnlich denen, die man an modernen Flughäfen oder Bahnhöfen finden kann. Bei diesen gibt der Nutzer sein Gepäck an einem Terminal auf und erhält dann irgend eine Art der Quittung für das Gepäckstück. Das kann zum Beispiel in Form eines Zettels mit Strichkode sein. Hat der Besitzer also seinen Koffer oder Ähnliches abgegeben, sorgt das System nicht nur für die Erzeugung der Quittung, sondern auch für den Transport des Objektes zur Aufbewahrungsstelle, wo es eingelagert wird, bis der Nutzer es wieder über das Terminal abholt. Alternativ kann es auch sein, dass Gepäck, das sich länger als 24 Stunden im Lagerungssystem befindet, entsorgt wird.\\
+		
+		In Anlehnung an diese realen Vorlagen ergaben sich folgende Vorgaben\footnotemark[1] für das Praktikum, die mit Abbildung \ref{fig:Aufgabenstellung_Skizze}\footnotemark[1] unterstützt wurden:
+		
+		\begin{figure}[H]
+			\centering
+				\includegraphics[width=\textwidth]{img/skizze.jpg}
+				\caption{Skizze zur Aufgabenstellung}
+				\label{fig:Aufgabenstellung_Skizze}
+		\end{figure}
+		
+		\footnotetext[1]{Quelle: \cite{DBPW}}
+
+		\newpage
+
+		\begin{quotation}
+ 			\textit{
+				 \begin{enumerate}
+					\item Es sollen mindesten 1000 Gepäckstücke verwaltet werden können.
+					\item Überschreitet die Einlagerungsdauer eines Gepäcks 24 Stunden, soll das Gepäckstück automatisch aus dem Lager entfernt werden.
+					\item Es sollen mindestens 3 Terminals betrieben werden, an denen gleichzeitig Gepäck aufgegeben bzw. abgeholt werden kann.
+					\item Es soll ein reibungsloser Transport des Gepäcks zwischen Terminal und dem Einlagerungsort gewährleistet werden.
+				\end{enumerate}
+			}
+		\end{quotation}
+		
+		
+		In dieser Ausarbeitung wird mein Projekt als das \textbf{Baggage Management System} - kurz \textbf{BMS} - bezeichnet.
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Verwendete Software
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\section{Verwendete Software}
+		\label{chap:Software}
+	
+		\subsection{Entwicklungssoftware}
+			Da es, wie in Kapitel \ref{chap:Aufgabenstellung} beschrieben, keine Vorgaben für die zu verwendende Software gab, waren die Projektrestriktionen und persönliche Präferenzen ausschlaggebend. Aufgrund langjähriger Erfahrung mit \textbf{MySQL}\footnote{\url{http://www.mysql.com/}} und der Tatsache, dass es kostenlos war, entschied ich mich für dieses Datenbanksystem. Die wichtigste, noch nicht genannte, Einschränkung lautete, dass die komplette Gepäckaufbewahrungssimulation in der Datenbank abgewickelt werden muss. Also kam man um \textit{Stored Procedures / Functions}\footnote{In der Datenbank gespeicherte Prozeduren und Funktionen} nicht herum. Um außerdem einen kontinuierlichen Ablauf des Transports zu gewährleisten, sah ich nur die möglichkeit, mit Events zu arbeiten. Diese werden erst seit Version 5.1\footnote{Release Candidate, Stand: 11.09.2008} von MySQL unterstützt. Letztendlich wurde mein Projekt unter \textbf{Version 5.1 und der Alphaversion 6.0 von MySQL} entwickelt.
+			
+			Für das Web Front-End wurde Server-seitig \textbf{PHP 5}\footnote{\url{http://www.php.net/}} und Client-seitig JavaScript eingesetzt. Die \textbf{jQuery}\footnote{\url{http://www.jquery.com/}} Library erleichterte die AJAX\footnote{Asynchronous JavaScript and XML}-Programmierung in JavaScript.\\
+			
+			\newpage
+		
+			Mit Hilfe folgender Programme entstand das BMS:
+		
+			\begin{itemize}
+				\item Server-Software:
+					\begin{itemize}
+						\item Apache 2.2.8 Win32
+						\item MySQL 6.0 Alpha und 5.1 RC
+						\item PHP 5.2.5
+						\item phpMyAdmin 2.11.4\footnote{\url{http://www.phpmyadmin.net/}}
+					\end{itemize}
+				\item Client-Software:
+					\begin{itemize}
+						\item jQuery 1.2.6
+						\item jQuery Live Query Plugin 1.0.2\footnote{\url{http://brandonaaron.net/docs/livequery/}}
+					\end{itemize}
+			\end{itemize}
+		
+		\subsection{Testsoftware}
+			
+			Getestet wurde das Projekt mit dieser Software:
+			
+			\begin{itemize}
+				\item Betriebssysteme:
+					\begin{itemize}
+						\item Windows XP Home 32 Bit Service Pack 2
+						\item Windows Vista Home Premium 64 Bit Service Pack 1
+					\end{itemize}
+				\item Browser:
+					\begin{itemize}
+						\item Firefox 3.0.1\footnote{\url{http://www.mozilla-europe.org/de/firefox/}}
+						\item Opera 9.52\footnote{\url{http://de.opera.com/}}
+						\item Internet Explorer 7.0.5730.13\footnote{\url{http://www.microsoft.com/germany/windows/downloads/ie/getitnow.mspx}}
+					\end{itemize}
+			\end{itemize}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Verwendete Hardware
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\newpage
+	\section{Verwendete Hardware}
+		\label{chap:Hardware}
+		Drei Testrechner standen zur Verfügung (Tabelle \ref{tab:Testrechner}). Das Projekt wurde auf diesen PCs unterschiedlicher Leistungsstärke getestet. Die Wegfindung hat sichtbare Unterschiede bei den verschiedenen Hardware-Konfigurationen aufgedeckt. So lief sie auf dem langsamsten Testrechner Nummer 1 bei der Betrachtung im Web Front-End wesentlich holpriger ab als auf den anderen Testsystemen. Sonst gab es keine weiteren Unterschiede, mit Ausnahme eines kleinen Problems, dass in Kapitel \ref{chap:Fehler} "`Bekannte Fehler"' erläutert wird. Trotzdem wird ein Rechner, vergleichbar mit Testsystem 2, zur Betrachtung des BMS über das Web Interface empfohlen.
+	
+		\begin{table}[H]
+			\begin{tabular}{|l|l|l|l|}
+				\hline
+				\textbf{Komponente}	&	\textbf{Testrechner 1}	&	\textbf{Testrechner 2}	&	\textbf{Testrechner 3}	\\
+				\hline
+				Prozessor			&	Pentium 4				&	AMD 64 X2 Dual Core 	&	Intel Core 2 Duo T9300	\\
+				\hline
+				Taktung				&	1 x 2,6 GHz				&	2 x 2,0 GHz				&	2 x 2,5 GHz	\\
+				\hline
+				RAM					&	0,5 GB					&	2,0 GB					&	4,0 GB	\\
+				\hline
+				Systemtyp			&	32 Bit					&	64 Bit					&	64 Bit	\\
+				\hline
+				Betriebssystem		&	Windows XP 32 Bit		&	Windows XP 32 Bit		&	Windows Vista 64 Bit	\\
+				\hline
+			\end{tabular}
+			\caption{Testrechnerkonfigurationen}
+			\label{tab:Testrechner}
+		\end{table}
+
+		
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Installation
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%\newpage
+	\section{Installation}
+		
+		Die Installation wird detailliert in der \textbf{readme.txt}\footnote{Befindet sich im Installationsordner} beschrieben. Hier nur eine kurze Zusammenfassung:
+
+		\subsection{Datenbank einrichten}
+			\label{sec:Datenbank einrichten}
+			\begin{enumerate}
+				\item In den "`sql"'-Ordner im Installationsverzeichnis wechseln:\\
+					\textbf{cd sql}
+				\item MySQL Server 5.1 (oder höher) starten:\\
+					\textbf{mysqld $--$event-scheduler=1}
+				\item Per Konsole auf selbigen verbinden:\\
+					\textbf{mysql -uYourUsername -pYourPassword}
+				\item Neue Datenbank mit beliebigem Namen erstellen:\\
+					\textbf{CREATE DATABASE YourDatabase;}
+				\item Auf die neue Datenbank verbinden:\\
+					\textbf{USE YourDatabase;}
+				\item Installationsskript ausführen:\\
+					\textbf{SOURCE init.sql;}
+			\end{enumerate}
+			
+			Wie das System in Verbindung mit der Konsole gesteuert werden kann, ist in Kapitel \ref{sec:Konsole} nachzulesen.\\
+		
+		\subsection{Web Front-End-Konfiguration}
+			Es folgt die Konfiguration des Web Front-Ends:
+			\begin{enumerate}
+				\item Datei \textbf{config.inc.php} im Installationsordner mit beliebigem Texteditor öffnen
+				\item Werte für \textbf{CFG\_DB\_HOST} (Name des MySQL-Servers, z.B: "`localhost"'), \\
+					\textbf{CFG\_DB\_NAME} (Name der zu verwendenden Datenbank), \textbf{CFG\_DB\_USER} (Benutzername für den MySQL-Server) und \textbf{CFG\_DB\_PWD} (dazugöriges Passwort) anpassen
+				\item Falls nicht bereits geschehen: \textbf{JavaScript im Browser aktivieren}
+				\item Per Webbrowser ins Installationsverzeichnis wechseln und die Datei \textbf{index.php} aufrufen
+			\end{enumerate}
+			
+			Die Steuerung des BMS über das Web Front-End wird in Abschnitt \ref{sec:Web Front-End} genauer beschrieben.
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% Steuerung
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\section{Steuerung}
+		\subsection{Konsole}
+			\label{sec:Konsole}
+			Wichtig bei der Arbeit mit der Konsole ist es, dass der Event Scheduler aktiviert wird. In meinen Testfällen hat er sich mit jedem Server Shutdown wieder auf 0 zurückgesetzt. Ohne den Scheduler wird das Gepäck nicht weiterbewegt. Hat man den MySQL-Server - wie in Kapitel \ref{sec:Datenbank einrichten} beschrieben - mit dem Parameter \texttt{$--$event-scheduler=1} gestartet, braucht man sich nicht mehr darum kümmern. Ohne den Parameter, muss man ihn mit dem Aufruf \texttt{CALL setEventScheduler(1);} einschalten. Nun kann man alle Anfragen, die in Tabelle \ref{tab:Prozeduren} aufgelistet sind, zur Steuerung des BMS' verwenden.
+			
+		
+		\subsection{Web Front-End}
+			\label{sec:Web Front-End}
+			Im Gegensatz zum alleinigen Einsatz der Konsole, braucht man sich als Nutzer des Web Front-Ends nicht um den Event Scheduler sorgen. Beim ersten Betreten der Webseite, wird er automatisch aktiviert. Das zeigt sich auch in dem Query Log. Was welche Knöpfe und Kontrollfelder des Front-Ends bewirken, wird direkt neben ihnen beschrieben und dürfte selbst erklärend sein.
+
+			\begin{figure}[H]
+				\centering
+					\includegraphics[width=\textwidth]{img/screenshot_bms.png}
+					\caption{Screenshot des Web Front-Ends}
+					\label{fig:Screenshot_BMS}
+			\end{figure}
+			
+		\subsection{Debugging}
+			Für erleichtertes Debugging ist es empfehlenswert, die Konstante \texttt{SHOW\_BAG\_LABELS} in der Datei \textbf{config.inc.php} im Installationsverzeichnis auf den Wert 1 zu setzen. Durch diese Änderung wird auf jedem Gepäckstück im Web Interface die eigene ID angegeben. Die Deaktivierung des Event Schedulers bewirkt eine Pausierung des gesamten Geschehens. Und nicht zu vergessen, bei längeren Tests: die Deaktivierung des 24h-Events.
+	
+		
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Aufbau
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\newpage
+	\section{Aufbau}
+		\label{chap:Aufbau}
+		
+		\subsection{Infrastruktur}
+			\label{sec:Infrastruktur}
+			In Grafik \ref{fig:ER}\footnote{Quelle: [Eigene Darstellung], Bild in Originalgröße: \texttt{doc/img/er.png}} wird das ER-Diagramm zur Datenbankstruktur dargestellt. Neben den dort visualisierten Relationen existieren noch zwei Views \textbf{bag\_list} und \textbf{bag\_image}. Während erstere die Identifikationsnummern der Gepäckstücke zurückliefert, die bereits in einem Regal eingelagert wurden, wird die zweite View nur von dem Web Front-End verwendet, um das Bild des Systems zu erzeugen. Die weitreichenden Abhängigkeiten durch Fremdschlüssel in den Datentabellen werden in Abbildung \ref{fig:Fremdschlüssel}\footnote{Erzeugt mit DbVisualizer Free 6.0.12, \url{http://www.dbvis.com/products/dbvis/}, Bild in Originalgröße: \texttt{doc/img/foreign\_keys.png}} aufgezeigt.
+			
+			\begin{figure}[H]
+				\centering
+					\includegraphics[width=\textwidth]{img/er.png}
+					\caption{Entity Relationship Diagram}
+					\label{fig:ER}
+			\end{figure}
+
+			\begin{figure}[H]
+				\centering
+					\includegraphics[width=\textwidth]{img/foreign_keys.png}
+					\caption{Fremdschlüsselverknüpfungen der Datentabellen}
+					\label{fig:Fremdschlüssel}
+			\end{figure}
+			
+			\subsubsection{segment}
+				Zentralstes Element des ganzen Systems sind die \textit{Segmente}, die in der Datentabelle \textbf{segment} abgespeichert sind. Diese Bausteine stellen nicht nur die gesamte sichtbare Infrastruktur bestehend aus Terminals, Fließbändern, Lifts und Regalfächern\footnote{Siehe Typenbeschreibung in Tabelle \ref{tab:Segmenttypen}} dar; sondern enthalten auch Informationen darüber, wo sich welches Gepäckstück gerade befindet (Attribut \texttt{bag\_id}). Zusätzlich wird in den Segmenten auch abgespeichert, welches von ihnen für welches Gepäck reserviert oder blockiert wird (Attribut \texttt{blocker\_bag}).
+				\begin{table}[H]
+					\begin{tabular}{|c|l|l|}
+						\hline
+						\textbf{Typ}	&	\textbf{Typname}	&	\textbf{Funktion}	\\
+						\hline
+						0				&	Fließband			&	Transportiert Gepäck von Terminals zu Regallifts und zurück			\\
+						\hline
+						1				&	Lift				&	Transportiert Gepäck von Fließbändern zu Regalfächern und zurück	\\
+						\hline
+						2				&	Terminal			&	Aufgabe und Entgegennahme von Gepäck								\\
+						\hline
+						3				&	Regalfach			&	Lagerungsort für genau ein Gepäckstück								\\
+						\hline
+					\end{tabular}
+					\caption{Datenbank: Segmenttypen}
+					\label{tab:Segmenttypen}
+				\end{table}
+				
+			\subsubsection{bag}
+				Alle Koffer, Taschen, etc. werden nach der Abgabe am Terminal in der Datentabelle \textbf{bag} gespeichert.
+			
+			\subsubsection{connection}
+				\label{sec:connection}
+				Mit einigen Ausnahme sind alle benachbarten Segmente miteinander verbunden, um den Transport zu gewährleisten. Diese gerichteten Verknüpfungen werden in der Datentabelle \textbf{connection} gesichert.
+			
+			\subsubsection{destination}
+				Wie eben in Abschnitt \ref{sec:connection} beschrieben, liegen Vorgänger-Nachfolger-Beziehungen zwischen den einzelnen Segmenten vor. An einigen Stellen gibt es aber mehr als nur einen möglichen Nachfolger. Um dennoch an das richtige Ziel zu gelangen, werden Meta-Informationen zu solchen Weichen in der Datentabelle \textbf{destination} hinterlegt. Diese erlauben es, an eine \textit{connection} beliebig viele \textit{labels} zu hängen, die auf die über diese Verbindung erreichbaren Ziele verweisen.
+
+			\subsubsection{label}
+				In der \textbf{label}-Datentabelle stehen die Markierungen, über die Segmente als Teil eines Regals oder eines Terminals identifiziert werden können. Wie oben erwähnt, wird in Verbindung der destination-Tabelle und den labels die Wegfindung ermöglicht.
+		
+		\subsection{Prozeduren und Funktionen}
+			
+		
+			\begin{table}[H]
+				\begin{tabular}{|l|l|}
+					\hline
+					\textbf{Aufruf}				&	\textbf{Funktion}															\\\hline
+					\multicolumn{2}{|l|}{\textbf{Steuerung} (Datei: proc\_bags.sql)}											\\\hline
+					CALL placeBag(x);			&	Neues Gepäckstück an Terminal \textbf{x} aufgeben							\\\hline
+					CALL retrieveBag(x, y);		&	Gelagertes Gepäckstück \textbf{x} zu Terminal \textbf{y} schicken			\\\hline
+					CALL discardBags();			&	Alle Gepäckstücke verwerfen													\\\hline
+					SELECT * FROM `bag\_list`;	&	Alle eingelagerten Gepäckstücke auflisten									\\\hline
+					\multicolumn{2}{|l|}{\textbf{Datenbankeinstellung} (Datei: proc\_events.sql)}								\\\hline
+					SELECT getEventScheduler();	&	Gibt den aktuellen Status des Event Schedulers zurück						\\\hline
+					CALL setEventScheduler(x);	&	Schaltet den Event Scheduler ein (\textbf{x=1}) oder aus (\textbf{x=0})		\\\hline
+					SELECT getEvent24hLimit();	&	Gibt den aktuellen Status des 24h-Events zurück								\\\hline
+					CALL setEvent24hLimit(x);	&	Schaltet das 24h-Event ein (\textbf{x=1}) oder aus (\textbf{x=0})			\\\hline
+					\multicolumn{2}{|l|}{\textbf{Transport} (Datei: proc\_pathfinding.sql)}										\\\hline
+					CALL getSucc(x);			&	Bewegt Gepäckstück \textbf{x} einen Schritt weiter							\\\hline
+					CALL checkSucc(x, y, z);	&	Testet, ob Segment \textbf{x} für Tasche \textbf{y} frei (\textbf{z}) ist	\\\hline
+					CALL moveBags();			&	Bewegt alle Gepäckstücke einen Schritt weiter								\\\hline
+					\multicolumn{2}{|l|}{\textbf{Debugging} (Datei: proc\_debug.sql)}											\\\hline
+					CALL fill(x);				&	Fülle die 1.000 Regalfächer um \textbf{x} Taschen auf						\\\hline
+				\end{tabular}
+				\caption{Datenbank: Prozeduren und Funktionen}
+				\label{tab:Prozeduren}
+			\end{table}
+			
+			
+		
+		\subsection{Ablauf}
+			Die folgenden Prozedur- und Funktionsnamen beziehen sich auf Tabelle \ref{tab:Prozeduren}. Die Parameterwerte sind exemplarisch.\\
+			
+			\subsubsection{Gepäckaufgabe}
+				Nachdem ein neues Gepäckstück von dem Nutzer über den Aufruf \texttt{CALL placeBag(1);} an Terminal 1 aufgegeben werden soll, wird in selbiger Prozedur zunächst überprüft, ob das Terminal frei ist. Dafür wird \texttt{checkSucc} zurate gerufen. Gibt diese Prozedur ein positives Signal zurück, muss noch ein freies Regalfach gefunden werden, wo die Tasche eingelagert werden kann. Die Auswahl erfolgt per Zufall unter den freien Fächern. Wurde ein solches gefunden, kann die neue Tasche in der Datentabelle \texttt{bag} erzeugt werden. Gleichzeitig wird über das Attribut \texttt{bag.dest\_seg} das Ziel abgespeichert.
+				
+				Nachdem dies geschehen ist, wird das Gepäck auf dem Terminal platziert. Dazu wird dessen Attribut \texttt{segment.bag\_id} auf die ID der neu erzeugten Tasche gesetzt. Direkt danach wird die zuvor ermittelte Regalbox für die Tasche reserviert. Also erhält das Attribut \texttt{segment.blocker\_bag} des Fachsegments ebenfalls die ID der Tasche. Damit ist das Fach für andere Taschen nicht mehr als frei markiert.
+			
+			\subsubsection{Transport zum Regal}
+				Wie in Abschnitt \ref{sec:Infrastruktur} beschrieben, sind die einzelnen Segmente, über die das Gepäck zu seinem Ziel gelangen soll, miteinander über die \texttt{connection}-Datentabelle verbunden. Jede Sekunde wird das Event \texttt{ev\_moveBags} aufgerufen, dass wiederrum die Prozedur \texttt{moveBags} ausführt. Diese veranlasst für jedes Gepäckstück, dass noch nicht an seinem Ziel angekommen ist, sich nach Möglichkeit einen Schritt weiter in Richtung Bestimmungsort zu bewegen. Also wird die Prozedur \texttt{getSucc} aufgerufen, welche sowohl die Wegfindung als auch das Weitersetzen der Taschen übernimmt.\\
+				
+				Zuerst werden vom aktuellen Standort der Tasche ausgehend die Möglichen Verbindungen zu Nachbarelementen gezählt. Sogleich werden von einer dieser Verbindungen Informationen gesammelt. Nun gibt es zwei Möglichkeiten. Als erstes kann es sein, dass es nur einen Nachfolger gibt. Ist dies der Fall, wird dieser überprüft, ob er nicht gerade von einem anderen Gepäckstück belegt, oder für eine andere Tasche reserviert ist. Bei freiem Status, wird die \texttt{bag\_id} des alten Segments auf \texttt{NULL} gesetzt, während der Nachfolger wieder die ID der Tasche erhält.
+				
+				Tritt jedoch alternativ der Fall ein, dass es mehr als einen Nachfolger gab, kommt die \texttt{destination}-Datentabelle ins Spiel. Ihre Einträge verweisen an Weggabelungen auf die verschiedenen Regale. Somit kann der richtige Weg ermittelt werden.
+				
+				Am richtigen Regal angekommen, muss noch das richtige Fach gefunden werden. Dazu wird bei mehreren Nachfolgern ohne Zielbestimmung folgendes simple Schema angewendet:
+				
+				\begin{enumerate}
+					\item Schiebe Tasche nach Süden, bis Tasche und Fach auf gleichem y-Wert sind.
+					\item Bewege Tasche einen Schritt nach Westen auf den Lift.
+					\item Lass die Tasche mit dem Lift nach oben fahren, bis Tasche und Fach den gleichen z-Wert haben.
+					\item Transportiere Tasche ein Stück nach Westen in das Fach hinein.
+				\end{enumerate}
+				
+				Wird der Lift betreten, reserviert das System alle Segmente dieser x-y-Koordinate für diese Tasche (\texttt{segment.blocker\_bag}). Der Fahrstuhl wird beim Verlassen wieder freigegeben.
+				
+			\subsubsection{Rücktransport zum Terminal}
+				Mit dem Aufruf \texttt{SELECT * FROM `bag\_list`;} durch den Nutzers kann sich selbiger die eingelagerten Gepäckstücke anzeigen lassen. Führt er nun die Anfrage \texttt{CALL retrieveBag(1, 3);} aus, möchte er damit bezwecken, dass der Koffer mit der \texttt{bag\_id} 1 zu dem Terminal mit der \texttt{label\_number} 3 gesendet wird, um es da abzuholen.
+				
+				Nun wird nachgeforscht, ob das Terminal frei ist. Wenn dem so ist, bekommt das Gepäck das Terminal als neues Ziel zugeordnet (\texttt{bag.dest\_seg}). Damit greift wieder das Event, dass den Koffer nun als Element identifiziert, das nicht an seinem Bestimmungsort angelangt ist. Es tritt wieder ein fest definiertes Schema für das Gepäck in Aktion:
+				
+				\begin{enumerate}
+					\item Regal nach Osten verlassen und damit den Fahrstuhl betreten. Gleichzeitig das Fach wieder für andere Taschen freigeben.
+					\item Den Lift ganz nach unten fahren.
+					\item Den Fahrstuhl nach Osten verlassen und wieder auf das Fließband gelangen.
+					\item Dem Förderband solange nach Süden folgen, bis es wieder nur einen Nachfolger gibt.
+				\end{enumerate}
+				
+				Angekommen an den Terminals gibt es wieder viele Weichen, welche aber alle mit Destinations versehen sind, und somit den richtigen Weg weisen. Ist das gewünschte Terminal schließlich erreicht, wird die Tasche einfach aus der \texttt{bag}-Tabelle gelöscht. Durch die Fremdschlüsselabhängigkeiten\footnote{Siehe Abbildung \ref{fig:Fremdschlüssel}} zu der Tasche, werden automatisch von der Datenbank alle bestehenden Reservierungen auf \texttt{NULL} zurückgesetzt.
+			
+			\subsubsection{Verfall des Gepäcks}
+				Alle fünf Minuten wird das Event \texttt{ev\_24hLimit} aufgerufen, welches alle Gepäckstücke, die länger als fünf Minuten im Umlauf sind, löscht. Die Fremdschlüsselverknüpfungen besorgen wieder den Rest. Dadurch kann es passieren, dass Koffer maximal 9:59 Minuten im System vorhanden sind. Mit \texttt{CALL setEvent24hLimit(0);} lässt sich dieses Event deaktivieren.
+				
+				In meinen Testfällen war es allerdings so, dass wenn der MySQL-Server geschlossen wurde, während das Event deaktiviert war, es beim nächsten Start des Servers nicht mehr in der Datenbank vorhanden war. Es musste neu installiert werden.
+		
+		
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Bekannte Fehler
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\section{Bekannte Fehler}
+		\label{chap:Fehler}
+
+		\textbf{Problem:} In einigen Fällen passierte es, dass sich das Bild des Gepäcksystems im Web Front-End nicht mehr von alleine aktualisierte.\\
+		\textbf{Lösung:} Durch Aktualisierung der Webseite (Taste [F5]) funktioniert das Auto-Update wieder. Ursache für dieses Problem könnten im Caching liegen. Der Fehler trat nur auf Testrechner 3\footnote{Siehe Tabelle \ref{tab:Testrechner}} auf, auf dem Windows Vista lief.
+
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Anmerkungen
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\section{Anmerkungen}
+		Es gäbe noch die Möglichkeit, das BMS zu erweitern. So könnte man statt der Ad Hoc-Wegberechnung eine einmalige einführen. Momentan wird bei jedem Aufruf der Wegfindungsprozedur nur der nächste Schritt berechnet und gegebenfalls ausgeführt. Je mehr Gepäckstücke auf einmal im Umlauf sind, desto langsamer könnte das System werden. Als Alternative könnte man den kompletten Weg von Start- bis Zielsegment in dem Augenblick berechnen lassen, in dem die Tasche am Terminal abgegeben wird.
+		
+		Diesen kompletten Weg könnte man in der Datenbank speichern und dann bei jedem Schritt nur noch abfragen. Der logische Nachteil, der sich aus diesem Ablauf ergeben würde, wäre ein erhöhter Speicherbedarf.\\
+		
+		Als anderer Punkt der Performanceoptimierung steht die Visualisierung im Web Interface an. In einer früheren Version habe ich \textit{Scalable Vector Graphics} (SVG) verwendet, um das Bild zu erzeugen. Aufgrund des unglaublich langsamen Bildaufbaus war ich allerdings gezwungen, auf die gd-Library zurückzugreifen, um klassische PNGs zu erzeugen. PNG kann die gleichen Bildinhalte um ein Vielfaches schneller darstellen als SVG. Da ein Heranzoomen an die Grafik nicht notwendig ist, kann deshalb getrost auf SVG verzichtet werden.
+
+
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Bibliographie
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	%\newpage
+	%\addcontentsline{*}{section}{Literatur}
+	%\addcontentsline{toc}{section}{Literatur}
+	%\bibliography{literature}
+	\bibliographystyle{abbrv}
+	\begin{thebibliography}{5}
+	
+	
+		\bibitem [DBPW]{DBPW}
+		Datenbankpraktikum Webseite:\\
+		Bild von \url{http://www.cs.uni-potsdam.de/wv/lehre/08SS/08-DB-Praktikum/inhalt.html},\\
+		Stand: 11.09.2008
+	
+	\end{thebibliography}
+	%\appendix
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Schluss
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

@@ -1,0 +1,12 @@
+source ../config.cfg.php
+
+cd ../sql
+
+in_file=install.sql.tpl
+tmp_file=$in_file.tmp
+line=@db_name
+rep=$DB_NAME
+sed -e "s/${line}/${rep}/g" $in_file > $tmp_file
+
+$SQL_UNIX_BIN -u$DB_USER -p$DB_PWD < $tmp_file
+rm $tmp_file
