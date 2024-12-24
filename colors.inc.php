@@ -14,13 +14,13 @@ if (!defined('STYLE_COLORS')) {
 	//******************************************************************************
 	/**
 	 * This function autoloads missing classes.
-	 * @param	String		$className		the name of the missong class
+	 * @param	String		$class_name		the name of the missing class
 	 */
-	function __autoload($class_name) {
-	    include_once($class_name . '.class.php');
-	}
+	spl_autoload_register(function ($class) {
+		include_once($class . '.class.php');
+	});
 	//******************************************************************************
-	
+
 	$fill_alpha = 50;
 	$stroke_alpha = 0;
 	$stroke_color = '#000';
@@ -31,7 +31,7 @@ if (!defined('STYLE_COLORS')) {
 	//		$stroke_color:	'#000' - '#FFF' or '#000000' - '#FFFFF', default: '#FFF'
 	//		$fill_alpha:		0 - 127, default: 0
 	//		$stroke_alpha:	0 - 127, default: 0
-	$colors = array (
+	$colors = array(
 		TYPE_ACCESS => new Colors('#47E', '#36D', $fill_alpha, $stroke_alpha),
 		TYPE_ASSEMBLY_LINE => new Colors('#FC2', '#EB1', $fill_alpha, $stroke_alpha),
 		TYPE_ASSEMBLY_LINE_RESERVED => new Colors('#D67', '#F00', $fill_alpha, $stroke_alpha),

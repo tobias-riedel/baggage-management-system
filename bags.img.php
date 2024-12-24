@@ -32,13 +32,14 @@ include("bags.img." . $renderStyle . ".php");
  * This function places text in the image.
  *
  */
-function createText($x, $y, $z, $text, $font = 1) {
+function createText($x, $y, $z, $text, $font = 1)
+{
 	global $img, $textColor;
 
 	// position text within the segment
 	$newX = $x * SEG_WIDTH - $z * SEG_OFFSET_X + 5;
-	$newY =	$y * SEG_HEIGHT - $z * SEG_OFFSET_Y + 7;
-	
+	$newY = $y * SEG_HEIGHT - $z * SEG_OFFSET_Y + 7;
+
 	$c = $textColor;
 	$c = substr($c, strpos($c, '(') + 1);
 	$c = substr($c, 0, strrpos($c, ')'));
@@ -46,9 +47,9 @@ function createText($x, $y, $z, $text, $font = 1) {
 
 	$colorBlack = imagecolorallocate($img, 0x00, 0x00, 0x00);
 	$fontColor = !@$textColor ? $colorBlack : imagecolorallocate($img, $ca[0], $ca[1], $ca[2]);
-	
+
 	// create text
-	imagestring ($img, $font, $newX, $newY,  $text, $fontColor);
+	imagestring($img, $font, $newX, $newY, $text, $fontColor);
 }
 //*****************************************************************
 /**
@@ -56,18 +57,17 @@ function createText($x, $y, $z, $text, $font = 1) {
  * This function prepares the values to create the segment.
  *
  */
-function putSegment($x, $y, $z, $segType = 0, $even = 0) {
+function putSegment($x, $y, $z, $segType = 0, $even = 0)
+{
 	// put a segment
 	createSegment($x * SEG_WIDTH - $z * SEG_OFFSET_X, $y * SEG_HEIGHT - $z * SEG_OFFSET_Y, SEG_WIDTH, SEG_HEIGHT, $segType, $even);
 }
 //*****************************************************************
 
-
-
 // create image
-$img = imagecreatetruecolor(IMG_WIDTH, IMG_HEIGHT);
+$img = @imagecreatetruecolor(IMG_WIDTH, IMG_HEIGHT) or die("Could not initialize GD stream!");
 // create transparent background
-$bg = imagecolorallocate ($img, 0xFF, 0xFF, 0xFF);
+$bg = imagecolorallocate($img, 0xFF, 0xFF, 0xFF);
 imagecolortransparent($img, $bg);
 imagefilledrectangle($img, 0, 0, IMG_WIDTH, IMG_HEIGHT, $bg);
 
@@ -79,7 +79,7 @@ try {
 	createText(15, 15, 0, $lang['database_not_installed'] . "!");
 	imagepng($img);
 	imagedestroy($img);
-	
+
 	die();
 }
 
@@ -99,12 +99,12 @@ $result = $db->query($query);
 
 // print the segments structure
 while ($row = $result->fetchObject()) {
-	
+
 	$boxType = $row->seg_type;
-	
+
 	// initialize segment row
 	$newZ = $row->z;
-	
+
 	// some cosmetic stuff
 	if ($boxType == TYPE_TERMINAL && $row->blocker_bag)
 		$boxType = TYPE_TERMINAL_RESERVED;
@@ -116,21 +116,21 @@ while ($row = $result->fetchObject()) {
 		$boxType = TYPE_ASSEMBLY_LINE_RESERVED;
 	elseif ($boxType == TYPE_SHELF || $boxType == TYPE_TERMINAL || $boxType == TYPE_TERMINAL_RESERVED)
 		$newZ++;
-	
+
 	if ($boxType == TYPE_SHELF && $row->blocker_bag)
 		$boxType = $row->bag_id ? TYPE_SHELF_USED : TYPE_SHELF_RESERVED;
-		
+
 	// place the segment
-	if ($boxType != TYPE_SHELF_USED)
+	if ($boxType != TYPE_SHELF_USED) {
 		putSegment($row->x, $row->y, $newZ, $boxType, $row->z % 2);
+	}
 
 	// there is a bag here => place it
 	if ($row->bag_id) {
-	
 		if ($useAnimations != 'true' || $boxType == TYPE_SHELF_USED) {
 			putSegment($row->x, $row->y, $row->z + 1, $row->bag_id == $markedBag ? TYPE_BAG_MARKED : TYPE_BAG);
 		}
-		
+
 		if ($labels == 'true') {
 			createText($row->x, $row->y, $row->z + 1, $row->bag_id);
 		}
@@ -177,7 +177,7 @@ if ($stats == 'true') {
 	$row = $result->fetchObject();
 	$result->closeCursor();
 	$used_shelves = $row->used_shelves;
-	
+
 	// reserved shelves
 	$query = "SELECT COUNT(*) AS reserved_shelves
 		FROM " . VIEW_BAG_IMAGE . " 
@@ -186,7 +186,7 @@ if ($stats == 'true') {
 	$row = $result->fetchObject();
 	$result->closeCursor();
 	$reserved_shelves = $row->reserved_shelves;
-	
+
 	// reserved terminals
 	$query = "SELECT COUNT(*) AS reserved_terminals
 		FROM " . VIEW_BAG_IMAGE . " 
@@ -195,14 +195,13 @@ if ($stats == 'true') {
 	$row = $result->fetchObject();
 	$result->closeCursor();
 	$reserved_terminals = $row->reserved_terminals;
-	
+
 	$incoming_bags = $reserved_shelves - $used_shelves;
-	$workload = number_format((float)round(($used_shelves * 100) / $shelves, 2), 2, '.', '');
+	$workload = number_format((float) round(($used_shelves * 100) / $shelves, 2), 2, '.', '');
 
 	$msg = $lang['workload'] . ': ' . $workload . '% [+' . $incoming_bags . '][-' . $reserved_terminals . '][=' . $used_shelves . '/' . $shelves . ']';
 	createText(19, 32, 0, $msg, 3);
 }
-	
 
 // set header for png
 header("Content-Type: image/png");
@@ -214,7 +213,7 @@ $renderTime = @$_REQUEST['rtime'];
 
 if ($renderTime == 'true') {
 	$timeEnd = microtime(true);
-	$renderTime = number_format((float)round($timeEnd - $timeStart, 6), 6, '.', '');
+	$renderTime = number_format((float) round($timeEnd - $timeStart, 6), 6, '.', '');
 	createText(3, 32, 0, $lang['render_time'] . ': ' . $renderTime . 's', 3);
 }
 
