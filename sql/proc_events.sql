@@ -53,7 +53,7 @@ BEGIN
 	END IF;
 	
 	# debug information
-	CALL put_line( CONCAT( 'State of the event scheduler: ', getEventScheduler() ) );
+	CALL put_line( CONCAT( 'State of the event scheduler: ', if(getEventScheduler(), 1 , 0) ) );
 
 END $$
 ################################################################################
@@ -101,7 +101,7 @@ BEGIN
 	END IF;
 	
 	# debug information
-	CALL put_line( CONCAT( 'State of the event `ev_24hLimit`: ', getEvent24hLimit() ) );
+	CALL put_line( CONCAT( 'State of the event `ev_24hLimit`: ', if(getEvent24hLimit(), 1, 0) ) );
 END $$
 ################################################################################
 #
@@ -148,7 +148,7 @@ BEGIN
 	END IF;
 	
 	# debug information
-	CALL put_line( CONCAT( 'State of the event `ev_AutoMode`: ', getEventAutoMode() ) );
+	CALL put_line( CONCAT( 'State of the event `ev_AutoMode`: ', if(getEventAutoMode(), 1, 0) ) );
 
 END $$
 ################################################################################
