@@ -156,7 +156,7 @@ BEGIN
 			WHERE ( 
 				( src.x = srcX ) && ( src.y = srcY ) && ( src.z = srcZ ) &&
 				( dest.x = destX ) && ( dest.y = destY ) && ( dest.z = destZ )
-			 );
+			);
 END $$
 ################################################################################
 #
@@ -180,23 +180,23 @@ BEGIN
 					( ( dest.x = src.x + 1 ) && ( dest.y = src.y ) && ( dest.z = src.z ) ) ||
 					# west connection
 					( ( dest.x = src.x - 1 ) && ( dest.y = src.y ) && ( dest.z = src.z ) ) || ( 
-						 # north to south and reverse connections are only allowed for assembly lines ( seg_type 0 ) and terminal ( 2 )
-						 ( src.seg_type = 0 || src.seg_type = 2 ) && ( 
+						# north to south and reverse connections are only allowed for assembly lines ( seg_type 0 ) and terminal ( 2 )
+						( src.seg_type = 0 || src.seg_type = 2 ) && ( 
 							# south connection
 							( ( dest.x = src.x ) && ( dest.y = src.y + 1 ) && ( dest.z = src.z ) ) ||
 							# north connection
 							( ( dest.x = src.x ) && ( dest.y = src.y - 1 ) && ( dest.z = src.z ) )
-						 )
-					 ) || ( 
+						)
+					) || ( 
 						# upward and downward connections for lifts ( 1 ) only
 						dest.seg_type = 1 && ( 
 							# upward connection
 							( ( dest.x = src.x ) && ( dest.y = src.y ) && ( dest.z = src.z + 1 ) ) ||
 							# downward connection
 							( ( dest.x = src.x ) && ( dest.y = src.y ) && (src.z > 0) && ( dest.z = src.z - 1 ) )
-						 )
-					 )
-				 )
+						)
+					)
+				)
 			ORDER BY src.z ASC, src.y ASC, src.x ASC;
 END $$
 ################################################################################

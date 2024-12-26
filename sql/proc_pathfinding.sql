@@ -249,7 +249,7 @@ BEGIN
 						WHERE ( 
 							( x = @srcX + 1 && y = @srcY ) ||
 							( x = @srcX + 2 && y = @srcY && z = 0 )
-						 );
+						);
 				# check, if a lift has been left towards terminal
 				ELSEIF ( @srcType = 1 && @succType = 0 ) THEN
 					# undo the reservations for lift and eastern segment

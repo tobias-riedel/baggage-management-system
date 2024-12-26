@@ -14,7 +14,7 @@ CREATE VIEW `bag_image` AS
 			z = 0 OR
 			seg_type != 1 OR
 			( seg_type = 1 AND blocker_bag IS NOT NULL )
-		 );
+		);
 
 # create new view `bag_list` for the baggage list
 DROP VIEW IF EXISTS `bag_list`;
