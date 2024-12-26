@@ -17,10 +17,11 @@ include("colors.inc.php");
 
 // get baggage to mark
 $markedBag = @$_REQUEST['mark'];
-$useAnimations = @$_REQUEST['useAnimations'];
-$labels = @$_REQUEST['labels'];
-$stats = @$_REQUEST['stats'];
-$use3d = @$_REQUEST['use3d'];
+$useAnimations = @$_REQUEST['useAnimations'] == 'true';
+$labels = @$_REQUEST['labels'] == 'true';
+$stats = @$_REQUEST['stats'] == 'true';
+$renderTime = @$_REQUEST['rtime'] == 'true';
+$use3d = @$_REQUEST['use3d'] == 'true';
 $textColor = @$_REQUEST['textColor'];
 $renderStyle = !empty(@$_REQUEST['renderStyle']) ? $_REQUEST['renderStyle'] : 'rect';
 
@@ -61,6 +62,80 @@ function putSegment($x, $y, $z, $segType = 0, $even = 0)
 {
 	// put a segment
 	createSegment($x * SEG_WIDTH - $z * SEG_OFFSET_X, $y * SEG_HEIGHT - $z * SEG_OFFSET_Y, SEG_WIDTH, SEG_HEIGHT, $segType, $even);
+}
+//*****************************************************************
+function showStats($db, $show = false)
+{
+	global $lang;
+
+	if (!$show) {
+		return;
+	}
+
+	// total shelves
+	$query = "SELECT COUNT(*) AS shelves
+		FROM " . VIEW_BAG_IMAGE . " 
+		WHERE (seg_type = " . TYPE_SHELF . ")";
+	$result = $db->query($query);
+	$row = $result->fetchObject();
+	$result->closeCursor();
+	$shelves = $row->shelves;
+
+	// unused shelves
+	$query = "SELECT COUNT(*) AS unused_shelves
+		FROM " . VIEW_BAG_IMAGE . " 
+		WHERE (seg_type = " . TYPE_SHELF . " && ISNULL(blocker_bag))";
+	$result = $db->query($query);
+	$row = $result->fetchObject();
+	$result->closeCursor();
+	$unused_shelves = $row->unused_shelves;
+
+	// used shelves
+	$query = "SELECT COUNT(*) AS used_shelves
+		FROM " . VIEW_BAG_IMAGE . " 
+		WHERE (seg_type = " . TYPE_SHELF . " && !ISNULL(blocker_bag) && !ISNULL(bag_id))";
+	$result = $db->query($query);
+	$row = $result->fetchObject();
+	$result->closeCursor();
+	$used_shelves = $row->used_shelves;
+
+	// reserved shelves
+	$query = "SELECT COUNT(*) AS reserved_shelves
+		FROM " . VIEW_BAG_IMAGE . " 
+		WHERE (seg_type = " . TYPE_SHELF . " && !ISNULL(blocker_bag))";
+	$result = $db->query($query);
+	$row = $result->fetchObject();
+	$result->closeCursor();
+	$reserved_shelves = $row->reserved_shelves;
+
+	// reserved terminals
+	$query = "SELECT COUNT(*) AS reserved_terminals
+		FROM " . VIEW_BAG_IMAGE . " 
+		WHERE (seg_type = " . TYPE_TERMINAL . " && !ISNULL(blocker_bag))";
+	$result = $db->query($query);
+	$row = $result->fetchObject();
+	$result->closeCursor();
+	$reserved_terminals = $row->reserved_terminals;
+
+	$incoming_bags = $reserved_shelves - $used_shelves;
+	$workload = number_format((float) round(($used_shelves * 100) / $shelves, 2), 2, '.', '');
+
+	$msg = $lang['workload'] . ': ' . $workload . '% [+' . $incoming_bags . '][-' . $reserved_terminals . '][=' . $used_shelves . '/' . $shelves . ']';
+	createText(19, 32, 0, $msg, 3);
+}
+//*****************************************************************
+function showRenderTime($timeStart, $show = false)
+{
+	global $lang;
+
+	if (!$show) {
+		return;
+	}
+
+	$timeEnd = microtime(true);
+	$renderTime = number_format((float) round($timeEnd - $timeStart, 6), 6, '.', '');
+	createText(3, 32, 0, $lang['render_time'] . ': ' . $renderTime . 's', 3);
+
 }
 //*****************************************************************
 
@@ -127,11 +202,11 @@ while ($row = $result->fetchObject()) {
 
 	// there is a bag here => place it
 	if ($row->bag_id) {
-		if ($useAnimations != 'true' || $boxType == TYPE_SHELF_USED) {
+		if (!$useAnimations || $boxType == TYPE_SHELF_USED) {
 			putSegment($row->x, $row->y, $row->z + 1, $row->bag_id == $markedBag ? TYPE_BAG_MARKED : TYPE_BAG);
 		}
 
-		if ($labels == 'true') {
+		if ($labels) {
 			createText($row->x, $row->y, $row->z + 1, $row->bag_id);
 		}
 	}
@@ -150,72 +225,13 @@ createText(0, 25, 1, $lang['terminal'] . ' 7');
 createText(0, 29, 1, $lang['terminal'] . ' 8');
 
 // show stats
-if ($stats == 'true') {
-	// total shelves
-	$query = "SELECT COUNT(*) AS shelves
-		FROM " . VIEW_BAG_IMAGE . " 
-		WHERE (seg_type = " . TYPE_SHELF . ")";
-	$result = $db->query($query);
-	$row = $result->fetchObject();
-	$result->closeCursor();
-	$shelves = $row->shelves;
-
-	// unused shelves
-	$query = "SELECT COUNT(*) AS unused_shelves
-		FROM " . VIEW_BAG_IMAGE . " 
-		WHERE (seg_type = " . TYPE_SHELF . " && ISNULL(blocker_bag))";
-	$result = $db->query($query);
-	$row = $result->fetchObject();
-	$result->closeCursor();
-	$unused_shelves = $row->unused_shelves;
-
-	// used shelves
-	$query = "SELECT COUNT(*) AS used_shelves
-		FROM " . VIEW_BAG_IMAGE . " 
-		WHERE (seg_type = " . TYPE_SHELF . " && !ISNULL(blocker_bag) && !ISNULL(bag_id))";
-	$result = $db->query($query);
-	$row = $result->fetchObject();
-	$result->closeCursor();
-	$used_shelves = $row->used_shelves;
-
-	// reserved shelves
-	$query = "SELECT COUNT(*) AS reserved_shelves
-		FROM " . VIEW_BAG_IMAGE . " 
-		WHERE (seg_type = " . TYPE_SHELF . " && !ISNULL(blocker_bag))";
-	$result = $db->query($query);
-	$row = $result->fetchObject();
-	$result->closeCursor();
-	$reserved_shelves = $row->reserved_shelves;
-
-	// reserved terminals
-	$query = "SELECT COUNT(*) AS reserved_terminals
-		FROM " . VIEW_BAG_IMAGE . " 
-		WHERE (seg_type = " . TYPE_TERMINAL . " && !ISNULL(blocker_bag))";
-	$result = $db->query($query);
-	$row = $result->fetchObject();
-	$result->closeCursor();
-	$reserved_terminals = $row->reserved_terminals;
-
-	$incoming_bags = $reserved_shelves - $used_shelves;
-	$workload = number_format((float) round(($used_shelves * 100) / $shelves, 2), 2, '.', '');
-
-	$msg = $lang['workload'] . ': ' . $workload . '% [+' . $incoming_bags . '][-' . $reserved_terminals . '][=' . $used_shelves . '/' . $shelves . ']';
-	createText(19, 32, 0, $msg, 3);
-}
+showStats($db, $stats);
+showRenderTime($timeStart, $renderTime);
 
 // set header for png
 header("Content-Type: image/png");
 header("Cache-Control: no-cache, must-revalidate");
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
-
-// render time
-$renderTime = @$_REQUEST['rtime'];
-
-if ($renderTime == 'true') {
-	$timeEnd = microtime(true);
-	$renderTime = number_format((float) round($timeEnd - $timeStart, 6), 6, '.', '');
-	createText(3, 32, 0, $lang['render_time'] . ': ' . $renderTime . 's', 3);
-}
 
 // terminate database connection
 @$db = null;

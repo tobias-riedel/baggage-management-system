@@ -33,7 +33,7 @@ function createSegment($x, $y, $width, $height, $segType = TYPE_MISC, $even = 0)
 	imagefilledrectangle($img, $x, $y, $x + $width, $y + $height, $fillColor);
 	imagerectangle($img, $x, $y, $x + $width, $y + $height, $strokeColor);
 
-	if ($segType != TYPE_LIFT && $use3d == 'true' && ($segType == TYPE_SHELF || $segType == TYPE_SHELF_RESERVED || $segType == TYPE_SHELF_USED || $segType == TYPE_TERMINAL || $segType == TYPE_BAG || $segType == TYPE_BAG_MARKED || $segType == TYPE_TERMINAL_RESERVED)) {
+	if ($segType != TYPE_LIFT && $use3d && ($segType == TYPE_SHELF || $segType == TYPE_SHELF_RESERVED || $segType == TYPE_SHELF_USED || $segType == TYPE_TERMINAL || $segType == TYPE_BAG || $segType == TYPE_BAG_MARKED || $segType == TYPE_TERMINAL_RESERVED)) {
 		// create bottom polygon
 		$points = array($x, ($y + $height), ($x + $width), ($y + $height), ($x + $width + SEG_OFFSET_X), ($y + $height + SEG_OFFSET_Y), ($x + SEG_OFFSET_X), ($y + $height + SEG_OFFSET_Y));
 		imagefilledpolygon($img, $points, 4, $fillColor);
