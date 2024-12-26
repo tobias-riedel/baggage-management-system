@@ -24,19 +24,19 @@ switch ($_action) {
 		header('Content-type: text/html');
 		try {
 			$_id = @$_REQUEST['id'];
-			
+
 			// place the new baggage at a terminal
 			$query = "CALL placeBag($_id);";
 			$db->query($query);
-			
+
 			echo $query;
 		} catch (PDOException $e) {
 			echo $lang['database_error'] . ': ' . $e->getMessage();
 		}
-	break;
+		break;
 	case "getBaggageList":
 		header('Content-type: text/html');
-		
+
 		// get all bags that are at their intended shelves
 		$query = "SELECT * 
 			FROM " . VIEW_BAG_LIST . " 
@@ -44,14 +44,14 @@ switch ($_action) {
 		// just some formatting
 		$formated_query = str_replace("\n", "", str_replace("\r", "", str_replace("\t", "", $query)));
 
-		try {		
+		try {
 			$result = $db->query($query);
 			$num_rows = @$result->rowCount();
-			
+
 			echo "<BLIST>\n";
 			echo "	<QUERY>$formated_query</QUERY>\n";
 			echo "	<BAG_LIST>\n";
-		
+
 			if ($num_rows) {
 				while ($row = $result->fetchObject()) {
 					printf("	 							<option value=\"%d\">%05d</option>\n", $row->bag_id, $row->bag_id);
@@ -66,26 +66,24 @@ switch ($_action) {
 		} catch (PDOException $e) {
 			echo $lang['database_error'] . ': ' . $e->getMessage();
 		}
-	break;
+		break;
 	case "retrieveBaggage":
 		header('Content-type: text/html');
 		try {
 			$bagId = @$_REQUEST['bagId'];
-			
+
 			if ($bagId) {
 				$dest = $_REQUEST['dest'];
-				
+
 				if ($dest) {
 					// retrieve the baggage
 					$query = "CALL retrieveBag($bagId, $dest);";
 					$db->query($query);
-				}
-				else {
+				} else {
 					// no terminal selected
 					$query = $lang['no_query'];
 				}
-			}
-			else {
+			} else {
 				// no baggage selected
 				$query = $lang['no_query'];
 			}
@@ -95,7 +93,7 @@ switch ($_action) {
 		} catch (PDOException $e) {
 			echo $lang['database_error'] . ': ' . $e->getMessage();
 		}
-	break;
+		break;
 	case "setEvent":
 		header('Content-type: text/html');
 		$_perform = @$_REQUEST['perform'];
@@ -108,15 +106,15 @@ switch ($_action) {
 			// the event scheduler
 			case "autoMode":
 				$query = "CALL setEventAutoMode($_value);";
-			break;
+				break;
 			// the event scheduler
 			case "scheduler":
 				$query = "CALL setEventScheduler($_value);";
-			break;
+				break;
 			// the 24h-limit event
 			case "24hLimit":
 				$query = "CALL setEvent24hLimit($_value);";
-			break;
+				break;
 			default:
 		}
 
@@ -126,7 +124,7 @@ switch ($_action) {
 		} catch (PDOException $e) {
 			echo $lang['database_error'] . ': ' . $e->getMessage();
 		}
-	break;
+		break;
 	case "getEvent":
 		header('Content-type: text/xml');
 		$_perform = @$_REQUEST['perform'];
@@ -136,22 +134,22 @@ switch ($_action) {
 			// the event scheduler
 			case "scheduler":
 				$query = "SELECT getEventScheduler() state;";
-			break;
+				break;
 			// the 24h-limit event
 			case "24hLimit":
 				$query = "SELECT getEvent24hLimit() state;";
-			break;
+				break;
 			// the auto-mode-limit event
 			case "autoMode":
 				$query = "SELECT getEventAutoMode() state;";
-			break;
+				break;
 		}
-		
+
 		try {
 			$result = $db->query($query);
 			$event = $result->fetchObject();
 			$result->closeCursor();
-			
+
 			// return answer
 			echo "<EVENT>
 					<QUERY>$query</QUERY>
@@ -160,34 +158,34 @@ switch ($_action) {
 		} catch (PDOException $e) {
 			echo $lang['database_error'] . ': ' . $e->getMessage();
 		}
-	break;
+		break;
 	case "fillShelves":
 		header('Content-type: text/html');
 		try {
 			$_num = @$_REQUEST['num'];
-			
+
 			// place the new baggage at a terminal
 			$query = "CALL fill($_num);";
 			$db->query($query);
-			
+
 			echo $query;
 		} catch (PDOException $e) {
 			echo $lang['database_error'] . ': ' . $e->getMessage();
 		}
-	break;
+		break;
 	case "discardBaggage":
 		header('Content-type: text/html');
 		try {
 			// discard the baggage
 			$query = "CALL discardBags();";
 			$db->query($query);
-			
+
 			// return answer
 			echo $query;
 		} catch (PDOException $e) {
 			echo $lang['database_error'] . ': ' . $e->getMessage();
 		}
-	break;
+		break;
 	case "moveBags":
 		header('Content-type: text/html');
 		try {
@@ -197,7 +195,7 @@ switch ($_action) {
 		} catch (PDOException $e) {
 			echo $lang['database_error'] . ': ' . $e->getMessage();
 		}
-	break;
+		break;
 	case "animate":
 		header('Content-type: text/html');
 		try {
@@ -208,9 +206,9 @@ switch ($_action) {
 				WHERE (b.dest_seg != s.seg_id) 
 				ORDER BY x ASC, y ASC";
 			$result = $db->query($query);
-		
+
 			$text = "";
-			
+
 			echo "<BLIST>\n";
 			echo "	<HTML>\n";
 			echo "		<script type=\"text/javascript\">";
@@ -224,14 +222,14 @@ switch ($_action) {
 			}
 
 			echo "			flushBags();";
-			echo "		</script>";		
+			echo "		</script>";
 			echo "	</HTML>\n";
 			echo "	<QUERY>$text</QUERY>\n";
 			echo "</BLIST>\n";
 		} catch (PDOException $e) {
 			echo $lang['database_error'] . ': ' . $e->getMessage();
 		}
-	break;
+		break;
 	default:
 }
 
