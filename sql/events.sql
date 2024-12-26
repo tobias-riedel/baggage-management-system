@@ -56,17 +56,17 @@ DO BEGIN
 		WHERE ( seg_type = 2 )
 		INTO @terminals;
 
-	# do a random event for every terminal
-	SET @i = 1;
+	# do a random event for every terminal except terminal 1
+	SET @i = 2;
 	WHILE ( @i < ( @terminals + 1 ) ) DO
 	
 		# randomizer
-		SELECT FLOOR( RAND() * 4 )
+		SELECT FLOOR( RAND() * 8 )
 			INTO @randomEvent;
 			
-		IF ( @randomEvent = 0 ) THEN
+		IF ( @randomEvent = 0 || @randomEvent = 1) THEN
 			CALL placeBag( @i );
-		ELSEIF ( @randomEvent = 1 ) THEN
+		ELSEIF ( @randomEvent = 3 ) THEN
 			CALL retrieveRandomBag( @i );
 		END IF;
 		
