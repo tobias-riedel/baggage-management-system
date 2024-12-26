@@ -16,7 +16,7 @@
  */
 function createSegment($x, $y, $width, $height, $segType = TYPE_MISC, $even = 0)
 {
-	global $img, $colors, $use3d;
+	global $img, $colors;
 
 	// determine segment color
 	if ($segType == TYPE_SHELF) {
