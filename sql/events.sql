@@ -61,12 +61,12 @@ DO BEGIN
 	WHILE ( @i < ( @terminals + 1 ) ) DO
 	
 		# randomizer
-		SELECT FLOOR( RAND() * 8 )
+		SELECT FLOOR( RAND() * 4 )
 			INTO @randomEvent;
 			
-		IF ( @randomEvent = 0 || @randomEvent = 1) THEN
+		IF ( @randomEvent = 0 ) THEN
 			CALL placeBag( @i );
-		ELSEIF ( @randomEvent = 3 ) THEN
+		ELSEIF ( @randomEvent = 1 ) THEN
 			CALL retrieveRandomBag( @i );
 		END IF;
 		
